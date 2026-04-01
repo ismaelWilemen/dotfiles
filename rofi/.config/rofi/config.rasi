@@ -1,0 +1,22 @@
+@theme "theme.rasi"
+
+configuration {
+    modi:               "drun,run,window";
+    show-icons:         true;
+    icon-theme:         "Papirus-Dark";
+    drun-display-format: "{name}";
+    display-drun:       " apps";
+    display-run:        " run";
+    display-window:     " windows";
+
+    /* Comportamento */
+    case-sensitive:     false;
+    cycle:              true;
+    steal-focus:        false;
+
+    /* Keybinds */
+    kb-cancel:          "Escape,Super+a";
+    kb-accept-entry:    "Return,KP_Enter";
+    kb-row-up:          "Up,Control+p";
+    kb-row-down:        "Down,Control+n";
+}

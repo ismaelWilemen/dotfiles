@@ -1,0 +1,80 @@
+@import "colors.rasi"
+
+* {
+    font:                "VictorMono Nerd Font Italic 12";
+    background-color:    transparent;
+    text-color:          @foreground;
+    border:              0;
+    margin:              0;
+    padding:             0;
+    spacing:             0;
+}
+
+window {
+    background-color:    @background;
+    border:              2px;
+    border-color:        @border-color;
+    border-radius:       10px;
+    width:               380px;
+    location:            north west;
+    anchor:              north west;
+    x-offset:            10px;
+    y-offset:            10px;
+}
+
+inputbar {
+    background-color:    @background-alt;
+    border-radius:       10px 10px 0 0;
+    padding:             10px 12px;
+    spacing:             8px;
+    children:            [ prompt, entry ];
+}
+
+prompt {
+    text-color:          @selected;
+    font:                "VictorMono Nerd Font Bold Italic 12";
+}
+
+entry {
+    placeholder:         "Buscar...";
+    placeholder-color:   #555570;
+    cursor:              text;
+}
+
+listview {
+    background-color:    transparent;
+    padding:             8px;
+    spacing:             2px;
+    lines:               10;
+    scrollbar:           false;
+}
+
+element {
+    padding:             8px 12px;
+    border-radius:       6px;
+    spacing:             8px;
+    children:            [ element-icon, element-text ];
+}
+
+element normal.normal {
+    background-color:    transparent;
+    text-color:          @foreground;
+}
+
+element selected.normal {
+    background-color:    @selected;
+    text-color:          @selected-fg;
+}
+
+element alternate.normal {
+    background-color:    transparent;
+    text-color:          @foreground;
+}
+
+element-icon {
+    size:                20px;
+}
+
+element-text {
+    vertical-align:      0.5;
+}

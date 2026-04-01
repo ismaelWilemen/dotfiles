@@ -1,0 +1,955 @@
+----------------------------------------------------------------------------------------------------
+#+TITLE: Rakismacs
+#+AUTHOR: Rakis
+#+DESCRIPTION: Config pessoal do Emacs
+#+STARTUP: showeverything
+#+OPTIONS: toc:2
+----------------------------------------------------------------------------------------------------
+
+* TABELA DE CONTEÚDOS :toc:
+- [[#programas-importantes-de-carregar-primeiro][PROGRAMAS IMPORTANTES DE CARREGAR PRIMEIRO]]
+  - [[#adicionando-pasta-scripts-ao-path][Adicionando pasta scripts ao path]]
+  - [[#carregando-os-scripts][Carregando os scripts]]
+- [[#all-the-icons][ALL THE ICONS]]
+- [[#backup][BACKUP]]
+- [[#company][COMPANY]]
+- [[#dashboard][DASHBOARD]]
+- [[#diminish][DIMINISH]]
+- [[#dired][DIRED]]
+- [[#elfeed][ELFEED]]
+- [[#evil][EVIL]]
+- [[#flycheck][FLYCHECK]]
+- [[#fontes][FONTES]]
+  - [[#font-faces][Font faces]]
+  - [[#carregando-personalização-das-fontes-depois-de-aplicar-o-tema][Carregando personalização das fontes depois de aplicar o tema]]
+  - [[#variable-pitch-fora-dos-src-blocks][Variable pitch fora dos src blocks]]
+  - [[#ligatures][Ligatures]]
+- [[#general][GENERAL]]
+- [[#git-programs][GIT PROGRAMS]]
+  - [[#git-time-machine][Git Time Machine]]
+  - [[#magit][Magit]]
+- [[#highlight-todo][HIGHLIGHT TODO]]
+- [[#melhores-defaults][MELHORES DEFAULTS]]
+- [[#minibuffer-escape][MINIBUFFER ESCAPE]]
+- [[#modeline][MODELINE]]
+- [[#neotree][NEOTREE]]
+- [[#org-mode][ORG MODE]]
+  - [[#habilitando-tabela-de-conteúdo][Habilitando tabela de conteúdo]]
+  - [[#habilitando-org-bullets][Habilitando org-bullets]]
+  - [[#expansão-de-tag-de-code-block][Expansão de tag de code block]]
+- [[#projectile][PROJECTILE]]
+- [[#rainbow-delimiters][RAINBOW DELIMITERS]]
+- [[#rainbow-mode][RAINBOW MODE]]
+- [[#shells-e-terminais][SHELLS E TERMINAIS]]
+  - [[#eshell][Eshell]]
+  - [[#vterm][Vterm]]
+  - [[#vterm-toggle][Vterm toggle]]
+- [[#sudo-edit][SUDO EDIT]]
+- [[#suporte-a-linguagens][SUPORTE A LINGUAGENS]]
+  - [[#lsp-eglot][LSP (Eglot)]]
+  - [[#apheleia-formatter][Apheleia (formatter)]]
+  - [[#modos-de-linguagens-extras][Modos de linguagens extras]]
+- [[#temas][TEMAS]]
+- [[#transparência][TRANSPARÊNCIA]]
+- [[#vertico][VERTICO]]
+  - [[#vertico-1][Vertico]]
+  - [[#orderless][Orderless]]
+  - [[#marginalia][Marginalia]]
+  - [[#consult][Consult]]
+- [[#which-key][WHICH KEY]]
+
+* PROGRAMAS IMPORTANTES DE CARREGAR PRIMEIRO
+
+** Adicionando pasta scripts ao path
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.config/emacs/scripts/")
+#+end_src
+  
+** Carregando os scripts
+
+#+begin_src emacs-lisp
+(require 'elpaca-setup) ;; Gerenciador de pacotes Elpaca
+(require 'buffer-move)  ;; Buffer-move
+#+end_src
+
+* ALL THE ICONS
+Set de ícones para serem usados em outras packages
+
+#+begin_src emacs-lisp
+(use-package all-the-icons
+  :ensure t
+  :if (display-graphic-p))
+
+(use-package all-the-icons-dired
+  :ensure t
+  :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
+#+end_src
+
+* BACKUP 
+Por padrão, emacs cria backups, como "file.el" e "file.el~".  O código abaixo joga tudo na lixeira do sistema.
+
+#+begin_src emacs-lisp
+(setq backup-directory-alist '((".*" . "/home/rakis/.local/share/Trash/files/")))
+#+end_src
+
+* COMPANY
+[[https://company-mode.github.io/][Company]] é um framework de autocomplete.
+
+#+begin_src emacs-lisp
+(use-package company
+  :ensure t
+  :defer 2
+  :diminish
+  :custom
+  (company-begin-commands '(self-insert-command))
+  (company-idle-delay .1)
+  (company-minimum-prefix-length 2)
+  (company-show-numbers t)
+  (company-tooltip-align-annotations t)
+  :config
+  (global-company-mode 1))
+
+(use-package company-box
+  :ensure t
+  :after company
+  :diminish
+  :hook (company-mode . company-box-mode))
+#+end_src
+
+* DASHBOARD
+Dashboard mostrando arquivos recentes, agenda, booksmarks e um banner
+
+#+begin_src emacs-lisp
+(use-package dashboard
+  :ensure t 
+  :init
+  (setq initial-buffer-choice 'dashboard-open)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-banner-logo-title "Bem vindo, Rakis.")
+  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+  (setq dashboard-startup-banner "/home/rakis/.config/emacs/images/rakismacs.png")  ;; use custom image as banner
+  (setq dashboard-center-content nil) ;; set to 't' for centered content
+  (setq dashboard-items '((recents . 5)
+			  (projects . 3)
+                          (agenda . 5 )))
+  :custom
+  (dashboard-modify-heading-icons '((recents . "file-text")
+                                    (bookmarks . "book")))
+  :config
+  (dashboard-setup-startup-hook))
+#+end_src
+
+* DIMINISH
+Esconde a abreviação do minor-mode da modeline. Precisa que ':diminish' seja adicionado ao pacote pra poder esconder.
+
+#+begin_src emacs-lisp
+(use-package diminish
+  :ensure t)
+#+end_src
+
+* DIRED
+
+#+begin_src emacs-lisp
+(use-package dired-open
+  :ensure t
+  :config
+  (setq dired-open-extensions '(("gif" . "sxiv")
+                                ("jpg" . "sxiv")
+                                ("png" . "sxiv")
+                                ("mkv" . "mpv")
+                                ("mp4" . "mpv"))))
+
+(use-package peep-dired
+  :ensure t
+  :after dired
+  :hook (evil-normalize-keymaps . peep-dired-hook)
+  :config
+    (evil-define-key 'normal dired-mode-map (kbd "h") 'dired-up-directory)
+    (evil-define-key 'normal dired-mode-map (kbd "l") 'dired-open-file) ; use dired-find-file instead if not using dired-open package
+    (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
+    (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file)
+)
+
+(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+#+end_src
+
+* ELFEED
+Leitor de RSS newsfeed
+
+#+begin_src emacs-lisp
+(use-package elfeed
+  :ensure t
+  :config
+  (setq elfeed-search-feed-face ":foreground #ffffff :weight bold"
+        elfeed-feeds (quote
+                       (("https://www.reddit.com/r/linux.rss" reddit linux)
+                        ("https://www.reddit.com/r/commandline.rss" reddit commandline)
+                        ("https://www.reddit.com/r/distrotube.rss" reddit distrotube)
+                        ("https://www.reddit.com/r/emacs.rss" reddit emacs)
+                        ("https://www.gamingonlinux.com/article_rss.php" gaming linux)
+                        ("https://hackaday.com/blog/feed/" hackaday linux)
+                        ("https://opensource.com/feed" opensource linux)
+                        ("https://linux.softpedia.com/backend.xml" softpedia linux)
+                        ("https://itsfoss.com/feed/" itsfoss linux)
+                        ("https://www.zdnet.com/topic/linux/rss.xml" zdnet linux)
+                        ("https://www.phoronix.com/rss.php" phoronix linux)
+                        ("http://feeds.feedburner.com/d0od" omgubuntu linux)
+                        ("https://www.computerworld.com/index.rss" computerworld linux)
+                        ("https://www.networkworld.com/category/linux/index.rss" networkworld linux)
+                        ("https://www.techrepublic.com/rssfeeds/topic/open-source/" techrepublic linux)
+                        ("https://betanews.com/feed" betanews linux)
+                        ("http://lxer.com/module/newswire/headlines.rss" lxer linux)
+                        ("https://distrowatch.com/news/dwd.xml" distrowatch linux)))))
+
+(use-package elfeed-goodies
+  :ensure t
+  :after elfeed
+  :config
+  (elfeed-goodies/setup)
+  (setq elfeed-goodies/entry-pane-size 0.5))
+#+end_src
+
+* EVIL
+
+#+begin_src emacs-lisp
+(use-package evil
+  :ensure t
+  :init      ;; tweak evil's configuration before loading it
+  (setq evil-want-integration t  ;; This is optional since it's already set to t by default.
+        evil-want-keybinding nil
+        evil-vsplit-window-right t
+        evil-split-window-below t
+        evil-undo-system 'undo-redo)  ;; Adds vim-like C-r redo functionality
+  (evil-mode))
+
+(use-package evil-collection
+  :ensure t
+  :after evil
+  :config
+  (add-to-list 'evil-collection-mode-list 'help) ;; evilify help mode
+  (evil-collection-init))
+
+(use-package evil-tutor
+  :ensure t)
+(with-eval-after-load 'evil-maps
+  (define-key evil-motion-state-map (kbd "SPC") nil)
+  (define-key evil-motion-state-map (kbd "RET") nil)
+  (define-key evil-motion-state-map (kbd "TAB") nil))
+  (setq org-return-follows-link  t)
+#+end_src
+
+* FLYCHECK
+Precisa ser instalado linters para poder dar o highlight, como o python-flake8 ou luacheck. [[https://www.flycheck.org/en/latest/languages.html][Linguagens com suporte]]
+
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure t
+  :defer t
+  :diminish
+  :init (global-flycheck-mode))
+
+#+end_src
+
+
+* FONTES
+Definindo fontes do emacs
+
+** Font faces
+
+#+begin_src emacs-lisp
+  (defun minha/configurar-fontes (&optional frame)
+  (with-selected-frame (or frame (selected-frame))
+    (set-face-attribute 'default nil
+                        :font "VictorMonoNerdFontPropo"
+                        :height 130
+                        :weight 'medium)
+    (set-face-attribute 'variable-pitch nil
+                        :font "Midnight Study"
+                        :height 200
+                        :weight 'medium)
+    (set-face-attribute 'fixed-pitch nil
+                        :font "VictorMonoNerdFontPropo"
+                        :height 130
+                        :weight 'medium)))
+
+(add-hook 'elpaca-after-init-hook #'minha/configurar-fontes)
+(add-hook 'after-make-frame-functions #'minha/configurar-fontes)
+#+end_src
+
+** Carregando personalização das fontes depois de aplicar o tema
+
+#+begin_src emacs-lisp
+(defvar after-load-theme-hook nil)
+(defadvice load-theme (after run-after-load-theme-hook activate)
+  (run-hooks 'after-load-theme-hook))
+(defun rk/apply-font-faces ()
+  "Reaplica faces de fonte após carregar tema."
+  (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
+  (set-face-attribute 'font-lock-keyword-face nil :slant 'italic))
+
+(add-hook 'after-load-theme-hook #'rk/apply-font-faces)
+#+end_src
+
+** Variable pitch fora dos src blocks
+
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook #'variable-pitch-mode)
+
+(custom-set-faces
+  '(org-block                 ((t (:inherit fixed-pitch))))
+  '(org-block-begin-line      ((t (:inherit fixed-pitch))))
+  '(org-block-end-line        ((t (:inherit fixed-pitch))))
+  '(org-code                  ((t (:inherit fixed-pitch))))
+  '(org-verbatim              ((t (:inherit fixed-pitch))))
+  '(org-table                 ((t (:inherit fixed-pitch))))
+  '(org-formula               ((t (:inherit fixed-pitch))))
+  '(org-meta-line             ((t (:inherit fixed-pitch))))
+  '(org-document-info-keyword ((t (:inherit fixed-pitch)))))
+#+end_src
+
+** Ligatures
+
+#+begin_src emacs-lisp
+(use-package ligature
+  :ensure t
+  :config
+  ;; ativa ligatures em todos os modos de programação
+  (ligature-set-ligatures 'prog-mode
+    '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\"
+      "{-" "[]" "::" ":::" ":=" "!!" "!=" "!==" "-}"
+      "--" "---" "-->" "->" "->>" "-<" "-<<" "-~"
+      "#{" "#[" "##" "###" "####" "#(" "#?" "#_" "#_("
+      ".-" ".=" ".." "..<" "..." "?=" "??" ";;" "/*"
+      "/**" "/=" "/==" "/>" "//" "///" "&&" "||" "||="
+      "|=" "|>" "^=" "$>" "++" "+++" "+>" "=:=" "=="
+      "===" "==>" "=>" "=>>" "<=" "=<<" "=/=" ">-"
+      ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*" "<*>"
+      "<|" "<|>" "<$" "<$>" "<!--" "<-" "<--" "<->"
+      "<+" "<+>" "<=" "<==" "<=>" "<=<" "<>" "<<" "<<-"
+      "<<=" "<<<" "<~" "<~~" "</" "</>" "~@" "~-" "~="
+      "~>" "~~" "~~>" "%%"))
+
+  ;; ativa globalmente
+  (global-ligature-mode t))
+#+end_src
+
+* GENERAL
+
+#+begin_src emacs-lisp
+(use-package general
+  :ensure t
+  :config
+  (general-evil-setup)
+  (general-create-definer rk/leader-keys
+			    :states '(normal insert visual emacs)
+			    :keymaps 'override
+			    :prefix "SPC"
+			    :global-prefix "M-SPC")
+
+  (rk/leader-keys
+    "SPC" '(execute-extended-command :wk "M-x")
+    "TAB TAB" '(comment-line :wk "Comentar linha"))
+  
+  (rk/leader-keys
+    "." '(find-file :wk "Procurar arquivo")
+    "fc" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Editar config do emacs")
+    "fr" '(consult-recent-file :wk "Procurar arquivos recentes")
+    "ff" '(apheleia-format-buffer :wk "Formatar buffer")
+    "fs" '(save-buffer :wk "Salvar aquivo"))
+
+  (rk/leader-keys
+    "b" '(:ignore t :wk "Buffer")
+    "bi" '(ibuffer :wk "Ibuffer")
+    "bb" '(consult-buffer :wk "Trocar buffer")
+    "bn" '(next-buffer :wk "Próximo buffer")
+    "bp" '(previous-buffer :wk "Buffer anterior")
+    "br" '(revert-buffer :wk "Recarregar buffer")
+    "bk" '(kill-current-buffer :wk "Fechar buffer"))
+
+  (rk/leader-keys
+    "d" '(:ignore t :wk "Dired")
+    "dd" '(dired :wk "Open dired")
+    "dj" '(dired-jump :wk "Dired jump to current")
+    "dn" '(neotree-dir :wk "Open directory in neotree")
+    "dp" '(peep-dired :wk "Peep-dired"))
+
+  (rk/leader-keys
+    "e" '(:ignore t :wk "Eval/Eshell")
+    "eb" '(eval-buffer :wk "Eval buffer atual")
+    "ed" '(eval-defun :wk "Eval defun dentro ou depois do ponto")
+    "ee" '(eval-expression :wk "Eval expressão elisp")
+    "el" '(eval-last-sexp :wk "Eval expressão elisp antes do ponto")
+    "er" '(eval-region :wk "Eval elisp na região")
+    "es" '(eshell :wk "Abrir eshell")
+    "eh" '(consult-history :wk "Histórico do Eshell"))
+
+  (rk/leader-keys
+    "g" '(:ignore t :wk "Git")    
+    "g/" '(magit-displatch :wk "Magit dispatch")
+    "g." '(magit-file-displatch :wk "Magit file dispatch")
+    "gb" '(magit-branch-checkout :wk "Trocar branch")
+    "gc" '(:ignore t :wk "Criar") 
+    "gcb" '(magit-branch-and-checkout :wk "Criar branch e checkout")
+    "gcc" '(magit-commit-create :wk "Criar commit")
+    "gcf" '(magit-commit-fixup :wk "Criar commit de fixup")
+    "gC" '(magit-clone :wk "Clonar repo")
+    "gf" '(:ignore t :wk "Procurar") 
+    "gfc" '(magit-show-commit :wk "Mostrar commit")
+    "gff" '(magit-find-file :wk "Magit encontrar arquivo")
+    "gfg" '(magit-find-git-config-file :wk "Encontrar arquivo gitconfig")
+    "gF" '(magit-fetch :wk "Git fetch")
+    "gg" '(magit-status :wk "Magit status")
+    "gi" '(magit-init :wk "Inicializar repo")
+    "gl" '(magit-log-buffer-file :wk "Magit buffer log")
+    "gr" '(vc-revert :wk "Git recarregar arquivo")
+    "gs" '(magit-stage-file :wk "Git stage file")
+    "gt" '(git-timemachine :wk "Git time machine")
+    "gu" '(magit-stage-file :wk "Git unstage file"))
+
+  (rk/leader-keys
+    "h" '(:ignore t :wk "Ajuda")
+    "hf" '(describe-function :wk "Descrever função")
+    "hv" '(describe-variable :wk "Descrever variável")
+    "ht" '(consult-theme :wk "Browse temas")
+    "hrr" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "Recarregar config do emacs"))
+
+  (rk/leader-keys
+    "m" '(:ignore t :wk "Org")
+    "ma" '(org-agenda :wk "Agenda")
+    "me" '(org-export-dispatch :wk "Exportar documento")
+    "mi" '(org-toggle-item :wk "Alternar item")
+    "mt" '(org-todo :wk "To-Do")
+    "mB" '(org-babel-tangle :wk "Babel tangle")
+    "mT" '(org-todo-list :wk "Mostrar lista To-Do"))
+
+  (rk/leader-keys
+    "mb" '(:ignore t :wk "Tabelas")
+    "mb -" '(org-table-insert-hline :wk "Inserir hline"))
+
+  (rk/leader-keys
+    "md" '(:ignore t :wk "Data/prazo")
+    "mdt" '(org-time-stamp :wk "Timestamp"))
+
+  (rk/leader-keys
+    "p" '(projectile-command-map :wk "Projectile"))
+    
+  (rk/leader-keys
+    "t" '(:ignore t :wk "Alternar")
+    "tl" '(display-line-numbers-mode :wk "Alternar line numbers")
+    "tn" '(neotree-toggle :wk "Alternar NeoTree")
+    "tt" '(visual-line-mode :wk "Alternar linhas truncadas")
+    "tv" '(vterm-toggle :wk "Alternar Vterm"))
+
+  (rk/leader-keys
+    "w" '(:ignore t :wk "Janelas")
+    "wc" '(evil-window-delete :wk "Fechar janelas")
+    "wn" '(evil-window-new :wk "Nova janela")
+    "ws" '(evil-window-split :wk "Split horizontal")
+    "wv" '(evil-window-vsplit :wk "Split vertical")
+    "wh" '(evil-window-left :wk "Janela à esquerda")
+    "wj" '(evil-window-down :wk "Janela abaixo")
+    "wk" '(evil-window-up :wk "Janela acima")
+    "wl" '(evil-window-right :wk "Janela à direita")
+    "ww" '(evil-window-next :wk "Ir para próxima janela")
+    "wH" '(buf-move-left :wk "Mover buffer para a esquerda")
+    "wJ" '(buf-move-down :wk "Mover buffer para baixo")
+    "wK" '(buf-move-up :wk "Mover buffer para cima")
+    "wL" '(buf-move-right :wk "Mover buffer para a direita")))
+#+end_src
+
+* GIT PROGRAMS
+** Git Time Machine
+
+#+begin_src emacs-lisp
+(use-package git-timemachine
+  :ensure t
+  :after git-timemachine
+  :hook (evil-normalize-keymaps . git-timemachine-hook)
+  :config
+    (evil-define-key 'normal git-timemachine-mode-map (kbd "C-j") 'git-timemachine-show-previous-revision)
+    (evil-define-key 'normal git-timemachine-mode-map (kbd "C-k") 'git-timemachine-show-next-revision)
+)
+#+end_src
+
+** Magit
+
+#+begin_src emacs-lisp
+(use-package transient
+  :ensure t)
+
+(use-package magit
+  :ensure t
+  :after transient)
+#+end_src
+
+* HIGHLIGHT TODO
+
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :ensure t
+  :hook ((org-mode . hl-todo-mode)
+         (prog-mode . hl-todo-mode))
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+        hl-todo-keyword-faces
+        `(("TODO"       warning bold)
+          ("FIXME"      error bold)
+          ("HACK"       font-lock-constant-face bold)
+          ("REVIEW"     font-lock-keyword-face bold)
+          ("NOTE"       success bold)
+          ("DEPRECATED" font-lock-doc-face bold))))
+#+end_src
+
+* MELHORES DEFAULTS
+Fazendo Emacs ficar mais bonito um tico
+
+#+begin_src emacs-lisp
+(delete-selection-mode 1)    ;; You can select text and delete it by typing.
+(electric-indent-mode -1)    ;; Turn off the weird indenting that Emacs does by default.
+(electric-pair-mode 1)       ;; Turns on automatic parens pairing
+;; The following prevents <> from auto-pairing when electric-pair-mode is on.
+;; Otherwise, org-tempo is broken when you try to <s TAB...
+(add-hook 'org-mode-hook (lambda ()
+           (setq-local electric-pair-inhibit-predicate
+                   `(lambda (c)
+                  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+(global-auto-revert-mode t)  ;; Automatically show changes if the file has changed
+(global-display-line-numbers-mode 1) ;; Display line numbers
+(setq display-line-numbers-type 'relative)
+(global-visual-line-mode t)  ;; Enable truncated lines
+(menu-bar-mode -1)           ;; Disable the menu bar 
+(scroll-bar-mode -1)         ;; Disable the scroll bar
+(tool-bar-mode -1)           ;; Disable the tool bar
+(setq org-edit-src-content-indentation 0) ;; Set src block automatic indent to 0 instead of 2.
+#+end_src
+
+* MINIBUFFER ESCAPE
+Fazer o ESC quitar do minibuffer com um ESc, ao invés de 3.
+
+#+begin_src emacs-lisp
+(global-set-key [escape] 'keyboard-escape-quit)
+  #+end_src
+
+* MODELINE
+
+#+begin_src emacs-lisp
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1)
+  :config
+  (setq doom-modeline-height 35      ;; sets modeline height
+        doom-modeline-bar-width 5    ;; sets right bar width
+        doom-modeline-persp-name t   ;; adds perspective name to modeline
+        doom-modeline-persp-icon t)) ;; adds folder icon next to persp name
+#+end_src
+
+* NEOTREE
+Visualizador de aruivos em árvore.
+
+| COMANDO        | DESCRIÇÃO                 | KEYBINDING |
+|----------------+---------------------------+------------|
+| neotree-toggle | /Ativa NeoTree/           | SPC t n    |
+| neotree- dir   | /Abre a pasta no NeoTree/ | SPC d n    |
+
+#+begin_src emacs-lisp
+(use-package neotree
+  :ensure t
+  :config
+  (setq neo-smart-open t
+        neo-show-hidden-files t
+        neo-window-width 55
+        neo-window-fixed-size nil
+        inhibit-compacting-font-caches t
+        projectile-switch-project-action 'neotree-projectile-action) 
+        ;; truncate long file names in neotree
+        (add-hook 'neo-after-create-hook
+           #'(lambda (_)
+               (with-current-buffer (get-buffer neo-buffer-name)
+                 (setq truncate-lines t)
+                 (setq word-wrap nil)
+                 (make-local-variable 'auto-hscroll-mode)
+                 (setq auto-hscroll-mode nil)))))
+
+;; show hidden files
+#+end_src
+
+* ORG MODE
+
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook
+	  (lambda ()
+    (when (string-match "hyprland\\.org\\|config\\.org"
+                        (buffer-file-name))
+      (add-hook 'after-save-hook #'org-babel-tangle nil t))))
+#+end_src
+
+** Habilitando tabela de conteúdo
+
+#+begin_src emacs-lisp
+(use-package toc-org
+  :ensure t
+  :commands toc-org-enable
+  :init (add-hook 'org-mode-hook 'toc-org-enable))
+#+end_src
+
+** Habilitando org-bullets
+Org-bullets dá aos asteríscos um caractere de bullet point, fica bem mais bonito
+
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook 'org-indent-mode)
+(use-package org-bullets :ensure t)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+end_src
+
+** Expansão de tag de code block
+Org-tempo faz expansões de algumas tags, como code block, quotes e export blocks
+
+| Digitar a tag e apertar TAB | Expande para ...                        |
+|-----------------------------+-----------------------------------------|
+| <a                          | '#+BEGIN_EXPORT ascii' … '#+END_EXPORT  |
+| <c                          | '#+BEGIN_CENTER' … '#+END_CENTER'       |
+| <C                          | '#+BEGIN_COMMENT' … '#+END_COMMENT'     |
+| <e                          | '#+BEGIN_EXAMPLE' … '#+END_EXAMPLE'     |
+| <E                          | '#+BEGIN_EXPORT' … '#+END_EXPORT'       |
+| <h                          | '#+BEGIN_EXPORT html' … '#+END_EXPORT'  |
+| <l                          | '#+BEGIN_EXPORT latex' … '#+END_EXPORT' |
+| <q                          | '#+BEGIN_QUOTE' … '#+END_QUOTE'         |
+| <s                          | '#+BEGIN_SRC' … '#+END_SRC'             |
+| <v                          | '#+BEGIN_VERSE' … '#+END_VERSE'         |
+
+#+begin_src emacs-lisp
+(require 'org-tempo)
+#+end_src
+
+* PROJECTILE
+Projectiles é uma lib de interação com projetos pro emacs
+
+#+begin_src emacs-lisp
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-mode 1))
+#+end_src
+
+* RAINBOW DELIMITERS
+Colorização de parênteses
+
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :ensure t
+  :hook ((emacs-lisp-mode . rainbow-delimiters-mode)
+         (clojure-mode . rainbow-delimiters-mode)))
+#+end_src
+
+* RAINBOW MODE
+Mostrar as cores dos hex/rgb
+
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :ensure t
+  :diminish
+  :hook 
+  ((org-mode prog-mode) . rainbow-mode))
+#+end_src
+
+* SHELLS E TERMINAIS
+
+** Eshell
+Shell escrito em Elisp
+
+#+begin_src emacs-lisp
+(use-package eshell-syntax-highlighting
+  :ensure t
+  :after esh-mode
+  :config
+  (eshell-syntax-highlighting-global-mode +1))
+
+(setq eshell-rc-script (concat user-emacs-directory "eshell/profile")
+      eshell-aliases-file (concat user-emacs-directory "eshell/aliases")
+      eshell-history-size 5000
+      eshell-buffer-maximum-lines 5000
+      eshell-hist-ignoredups t
+      eshell-scroll-to-bottom-on-input t
+      eshell-destroy-buffer-when-process-dies t
+      eshell-visual-commands '("bash" "fish" "htop" "ssh" "top" "zsh"))
+#+end_src
+
+** Vterm
+Emulador de terminal. O shell-file-name setta o shell a ser usado em M-x shell, M-x term, M-x ansi-term e M-x vterm.
+
+#+begin_src emacs-lisp
+(use-package vterm
+  :ensure t
+  :config
+  (setq shell-file-name "/bin/zsh"
+        vterm-max-scrollback 5000))
+#+end_src
+
+** Vterm toggle
+Alterna entre o buffer atual e o buffer do vterm
+
+#+begin_src emacs-lisp
+(use-package vterm-toggle
+  :ensure t
+  :after vterm
+  :config
+  (setq vterm-toggle-fullscreen-p nil)
+  (setq vterm-toggle-scope 'project)
+  (add-to-list 'display-buffer-alist
+               '((lambda (buffer-or-name _)
+                     (let ((buffer (get-buffer buffer-or-name)))
+                       (with-current-buffer buffer
+                         (or (equal major-mode 'vterm-mode)
+                             (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
+                  (display-buffer-reuse-window display-buffer-at-bottom)
+                  (reusable-frames . visible)
+                  (window-height . 0.3))))
+#+end_src
+
+* SUDO EDIT
+Permite abrir arquivos com privilégios sudo ou alternar pra edição com sudo
+
+#+begin_src emacs-lisp
+(use-package sudo-edit
+  :ensure t
+  :config
+  (rk/leader-keys
+    "fu" '(sudo-edit-find-file :wk "Procurar arquivo com sudo")
+    "fU" '(sudo-edit :wk "Editar arquivo com sudo")))
+#+end_src
+
+* SUPORTE A LINGUAGENS
+Emacs tem o suporte integrado para Lisp, Scheme, DSSSL, Ada, ASM, C, C++, Fortran, Icon, IDL (COBRA), IDLWAVE, Java, JavaScript, M4, Makefiles, Metafont, Modula2, Object Pascal, Objective-C, Octave, Pascal, Perl, Pike, PostScript, Prolog, Python, Ruby, Simula, SQL, Tcl, Verilog, e VHDL. Para outras, vai ser preciso instalar pacotes de LSP.
+
+** LSP (Eglot)
+
+#+begin_src emacs-lisp
+(use-package eglot
+  :ensure nil
+  :hook ((python-mode      . eglot-ensure)
+         (python-ts-mode   . eglot-ensure)
+         (js-mode          . eglot-ensure)
+         (js-ts-mode       . eglot-ensure)
+         (html-mode        . eglot-ensure)
+         (css-mode         . eglot-ensure)
+         (json-mode        . eglot-ensure)
+         (jsonc-mode       . eglot-ensure)
+         (lua-mode         . eglot-ensure)
+         (sh-mode          . eglot-ensure)
+         (bash-ts-mode     . eglot-ensure)
+         (rust-mode        . eglot-ensure)
+         (rust-ts-mode     . eglot-ensure)
+         (yaml-mode        . eglot-ensure)
+         (toml-mode        . eglot-ensure)
+         (conf-mode        . eglot-ensure))
+  :config
+  (setq eglot-autoshutdown t
+        eglot-ignored-server-capabilities '(:inlayHintProvider))
+  ;; Jinja via jinja-lsp
+  (add-to-list 'eglot-server-programs
+               '((web-mode :language-id "jinja") . ("jinja-lsp")))
+  ;; JSONC usa o mesmo servidor do JSON
+  (add-to-list 'eglot-server-programs
+               '(jsonc-mode . ("vscode-json-language-server" "--stdio")))
+  ;; TOML via taplo
+  (add-to-list 'eglot-server-programs
+               '(toml-mode . ("taplo" "lsp" "stdio")))
+  ;; deixa flycheck no controle do linting
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-stay-out-of 'flymake)))
+#+end_src
+
+** Apheleia (formatter)
+
+#+begin_src emacs-lisp
+(use-package apheleia
+  :ensure t
+  :diminish
+  :config
+  (apheleia-global-mode +1)
+
+  ;; Python
+  (setf (alist-get 'python-mode apheleia-mode-alist) 'ruff)
+  (setf (alist-get 'python-ts-mode apheleia-mode-alist) 'ruff)
+
+  ;; Lua
+  (setf (alist-get 'lua-mode apheleia-mode-alist) 'stylua)
+
+  ;; Rust
+  (setf (alist-get 'rust-mode apheleia-mode-alist) 'rustfmt)
+  (setf (alist-get 'rust-ts-mode apheleia-mode-alist) 'rustfmt)
+
+  ;; JSON / JSONC
+  (setf (alist-get 'json-mode apheleia-mode-alist)
+        '(prettier-json))
+  (setf (alist-get 'jsonc-mode apheleia-mode-alist)
+        '(prettier-json))
+
+  ;; CSS / SCSS / HTML
+  (setf (alist-get 'css-mode apheleia-mode-alist)
+        '(prettier-css))
+  (setf (alist-get 'css-ts-mode apheleia-mode-alist)
+        '(prettier-css))
+
+  (setf (alist-get 'scss-mode apheleia-mode-alist)
+        '(prettier-scss))
+
+  (setf (alist-get 'html-mode apheleia-mode-alist)
+        '(prettier-html))
+  (setf (alist-get 'mhtml-mode apheleia-mode-alist)
+        '(prettier-html))
+
+  ;; Formatters
+  (setf (alist-get 'prettier-json apheleia-formatters)
+        '("prettier" "--parser" "json"))
+
+  (setf (alist-get 'prettier-css apheleia-formatters)
+        '("prettier" "--parser" "css"))
+
+  (setf (alist-get 'prettier-scss apheleia-formatters)
+        '("prettier" "--parser" "scss"))
+
+  (setf (alist-get 'prettier-html apheleia-formatters)
+        '("prettier" "--parser" "html")))
+#+end_src
+
+** Modos de linguagens extras
+
+#+begin_src emacs-lisp
+;; JSON com comentários
+(use-package json-mode
+  :ensure t
+  :mode (("\\.jsonc\\'" . jsonc-mode)
+         ("\\.*rc\\'"   . jsonc-mode)))
+
+;; YAML
+(use-package yaml-mode
+  :ensure t
+  :mode "\\.ya?ml\\'")
+
+;; TOML
+(use-package toml-mode
+  :ensure t
+  :mode "\\.toml\\'")
+
+;; Lua
+(use-package lua-mode
+  :ensure t
+  :mode "\\.lua\\'")
+
+;; Rust
+(use-package rust-mode
+  :ensure t
+  :mode "\\.rs\\'")
+
+;; Jinja/HTML com web-mode
+(use-package web-mode
+  :ensure t
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.jinja\\'" . web-mode)
+         ("\\.j2\\'"    . web-mode))
+  :config
+  (setq web-mode-engines-alist '(("jinja" . "\\.jinja\\'")))
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2))
+#+end_src
+
+* TEMAS
+Usa os temas do doom emacs ou customizados
+
+#+begin_src emacs-lisp
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+(use-package doom-themes
+  :ensure t
+  :config
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t)) ; if nil, italics is universally disabled
+
+(load-theme 'abyssal-terra t)
+#+end_src
+
+* TRANSPARÊNCIA
+
+#+begin_src emacs-lisp
+(add-to-list 'default-frame-alist '(alpha-background . 90))
+#+end_src
+
+* VERTICO
+Stack moderna de completion para o minibuffer, substitui o Ivy/Counsel.
+
+** Vertico
+UI de navegação no minibuffer com suporte a preview ao vivo via Consult.
+
+#+begin_src emacs-lisp
+(use-package vertico
+  :ensure t
+  :init
+  (vertico-mode)
+  :custom
+  (vertico-cycle t) ;; Volta ao início ao passar do último candidato
+  :bind (:map vertico-map
+         ("C-j" . vertico-next)
+         ("C-k" . vertico-previous)
+         ("C-l" . vertico-insert)
+         ("<escape>" . keyboard-escape-quit)))
+#+end_src
+
+** Orderless
+Permite buscar candidatos em qualquer ordem, estilo fuzzy finder.
+
+#+begin_src emacs-lisp
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
+** Marginalia
+Adiciona descrições e anotações aos candidatos no minibuffer.
+
+#+begin_src emacs-lisp
+(use-package marginalia
+  :ensure t
+  :init (marginalia-mode))
+#+end_src
+
+** Consult
+Substitui os comandos do Counsel com versões enriquecidas e com preview ao vivo.
+consult-buffer substitui switch-to-buffer, consult-theme tem preview ao vivo, etc.
+
+#+begin_src emacs-lisp
+(use-package consult
+  :ensure t
+  :init
+    (recentf-mode 1)
+    (setq recentf-max-saved-items 50)
+  :custom
+  (consult-preview-key 'any)) ;; Preview ao mover o cursor
+#+end_src
+
+* WHICH KEY
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :ensure t
+  :diminish
+  :init
+  (which-key-mode 1)
+  :config
+  (setq which-key-side-window-location 'bottom
+	  which-key-sort-order #'which-key-key-order-alpha
+	  which-key-sort-uppercase-first nil
+	  which-key-add-column-padding 1
+	  which-key-max-display-columns nil
+	  which-key-min-display-lines 6
+	  which-key-side-window-slot -10
+	  which-key-side-window-max-height 0.25
+	  which-key-idle-delay 0.8
+	  which-key-max-description-length 25
+	  which-key-allow-imprecise-window-fit nil
+	  which-key-separator " → "))
+#+end_src

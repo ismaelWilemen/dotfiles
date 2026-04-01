@@ -1,0 +1,16 @@
+# Elpaca (pacotes do Emacs - gerados automaticamente)
+emacs/.config/emacs/*
+!emacs/.config/emacs/config.org
+!emacs/.config/emacs/early-init.el
+!emacs/.config/emacs/init.el
+!emacs/.config/emacs/images
+!emacs/.config/emacs/scripts
+!emacs/.config/emacs/themes
+
+# Nvim se tiver repos embutidos
+nvim/.config/nvim/.git
+
+# Wallpaper selector - ignora tudo exceto os scripts
+wallpaper_selector/*
+!wallpaper_selector/selector.py
+!wallpaper_selector/run.sh

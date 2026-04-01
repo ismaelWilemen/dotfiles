@@ -1,0 +1,303 @@
+{ 
+ "layer": "top",
+ "height": 28,
+ "margin-left": 5,
+ "margin-right": 5,
+ "reload_style_on_change": true,
+ "modules-left": ["custom/left_div_1", "hyprland/workspaces", "custom/left_div_2", "custom/cpu", "custom/left_div_3", "memory", "custom/left_div_3", "gamemode", "custom/left_div_4", "hyprland/window", "custom/right_div_1"],
+ "modules-center": ["custom/left_div_5", "group/music", "custom/cava", "pulseaudio", "custom/right_div_2"],
+ "modules-right": ["custom/left_div_6", "network", "custom/right_div_3", "custom/bluetooth_battery", "custom/right_div_4", "idle_inhibitor", "custom/right_div_5", "backlight", "custom/right_div_5", "battery", "custom/right_div_6", "clock", "custom/right_div_7", "group/group-power", "custom/right_div_8"],
+
+"custom/cpu": {
+  "exec": "~/.config/waybar/scripts/cpu.sh",
+  "interval": 2,
+  "return-type": "json",
+  "tooltip": true,
+  "on-click": "alacritty -e btop"
+},
+
+"gamemode": {
+    "format": "󰊴",
+    "format-alt": "󰊴",
+    "glyph": "󰊴",
+    "use-icon": false,
+    "hide-not-running": false,
+    "icon-spacing": 4,
+    "icon-size": 20,
+    "tooltip": true,
+    "tooltip-format": "Games running: {count}"
+  },
+
+"hyprland/window": {
+  "max-length": 20,
+  "rewrite": {
+    "rakis@rakisbook:(.*)": " Alacritty - $1",
+    "(.*) — Ablaze Floorp": " Floorp - $1",
+    "(.*) - GNU Emacs at rakisbook": " Emacs - $1",
+    "": " Hyprland - Home"
+  }
+},
+
+"memory": {
+  "interval": 2,
+  "format": " {used:0.1f}GiB | {total:0.0f}GiB",
+  "tooltip-format": "󰓡 {swapUsed}GiB | {swapTotal}GiB",
+  "on-click": "alacritty -e btop",
+  "states": {
+    "warning": 60,
+    "critical": 85
+  }
+},
+
+"hyprland/workspaces": {
+  "persistent-workspaces": { "*": 5 },
+  "format": "{icon}",
+  "format-window-separator": "",
+  "format-icons": {
+    "1": "󰖟",
+    "2": "",
+    "3": "",
+    "4": "󰓓",
+    "default": "󱓝",
+    "active": "󰨑",
+    "urgent": "󱇎"
+  }
+},
+
+"custom/cava": {
+  "exec": "~/.config/waybar/scripts/cava.sh",
+  "tooltip": false,
+  "format": "{}",
+  "escape": false,
+  "on-click-middle": "playerctl play-pause",
+  "on-click-right": "playerctl next",
+  "on-click": "spicetify apply"
+},
+
+"group/music": {
+  "orientation": "inherit",
+  "drawer": {
+    "transition-duration": 500
+  },
+  "modules": ["mpris#main", "custom/center_div_1", "mpris#hidden"]
+},
+
+"mpris#hidden": {
+  "interval": 1,
+  "player": "spotify",
+  "format": "󰀥 {album}",
+  "album-len": 10,
+  "ignored-players": ["firefox"]
+},
+
+"mpris#main": {
+  "player": "spotify",
+  "player-icons": {
+    "default": "",
+    "spotify": ""
+  },
+  "status-icons": {
+    "playing": "",
+    "paused": "",
+    "stopped": ""
+  },
+  "format": "{player_icon} {status_icon} {title} - {artist}",
+  "format-stopped": "{status_icon} Nada tocando",
+  "title-len": 15,
+  "artist-len": 10,
+  "ignored-players": ["firefox"]
+},
+
+"pulseaudio": {
+    "format": "{volume}% {icon}",
+    "format-bluetooth": "{volume}% {icon} ",
+    "format-bluetooth-muted": "{volume}%  ",
+    "format-muted": "",
+    "format-icons": {
+        "headphone": "",
+        "hands-free": "",
+        "headset": "",
+        "phone": "",
+        "portable": "",
+        "car": "",
+        "default": ["", "", ""]
+    },
+    "on-click": "pavucontrol"
+},
+
+"battery": {
+  "bat": "BAT1",
+  "states": {
+    "warning": 30,
+    "critical": 15
+  },
+  "format": "{capacity}% {icon}",
+  "format-icons": {
+    "default": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+    "charging": ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"]
+  },
+
+  "tooltip-format": "{timeTo}, {health}"
+},
+
+"custom/bluetooth_battery": {
+  "exec": "/home/rakis/.config/waybar/scripts/bluetooth.sh",
+  "interval": 10,
+  "return-type": "json",
+  "on-click": "blueman-manager",
+  "tooltip": true
+},
+
+"backlight": {
+  "format": "{percent}% {icon}",
+  "format-icons": ["󰃞", "󰃝", "󰃟", "󰃠"],
+  "icon-size": 30
+},
+
+"idle_inhibitor": {
+  "format": "{icon}",
+  "format-icons": {
+    "activated": "󰅶 Real shit",
+    "deactivated": "󰾪 I sleep"
+  }
+},
+
+"group/group-power": {
+  "orientation": "inherit",
+  "drawer": {
+    "transition-duration": 500,
+    "children-class": "not-power",
+    "transition-left-to-right": false
+  },
+  "modules": [
+    "custom/power", // First element is the "group leader" and won't ever be hidden
+    "custom/quit",
+    "custom/right_div_7",
+    "custom/lock",
+    "custom/right_div_7",
+    "custom/reboot",
+    "custom/right_div_7",
+  ]
+},
+"custom/quit": {
+  "format": "󰗼",
+  "tooltip": false,
+  "on-click": "hyprctl dispatch exit"
+},
+"custom/lock": {
+  "format": "󰍁",
+  "tooltip": false,
+  "on-click": "swaylock"
+},
+"custom/reboot": {
+  "format": "󰜉",
+  "tooltip": false,
+  "on-click": "reboot"
+},
+"custom/power": {
+  "format": "",
+  "tooltip": false,
+  "on-click": "shutdown now"
+},
+
+"network": {
+  "interval": 1,
+  "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+  "format-ethernet": "",
+  "tooltip-format-ethernet": "{ifname} | 󰕒{bandwidthUpBytes} 󰇚{bandwidthDownBytes}",
+  "format-wifi": "{icon} {essid}",
+  "tooltip-format-wifi": "{essid} | 󰕒{bandwidthUpBytes} 󰇚{bandwidthDownBytes}",
+  "format-disconnected": "󰤮",
+  "tooltip-format-disconnected": "",
+  "on-click": "alacritty -e nmtui"
+},
+
+"clock": {
+  "format": "󰥔 {:%H:%M}",
+  "interval": 1,
+  "format-alt": "󰃭 {:%d/%m/%Y}",
+  "tooltip-format": "<tt><small>{calendar}</small></tt>",
+  "calendar": {
+    "mode": "month",
+    "mode-mon-col": 3,
+    "on-scroll": 1,
+    "format": {
+      "months": "{}",
+      "days": "{}",
+      "weekdays": "{}",
+      "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
+    }
+  },
+  "actions": {
+    "on-click-right": "mode",
+    "on-scroll-up": "shift_up",
+    "on-scroll-down": "shift_down"
+  }
+},
+
+"custom/left_div_1": {
+  "format": "\ue0be",
+  "tooltip": false
+},
+"custom/left_div_2": {
+  "format": "\ue0be",
+  "tooltip": false
+},
+"custom/left_div_3": {
+  "format": "\ue0bf",
+  "tooltip": false
+},
+"custom/left_div_4": {
+  "format": "\ue0be",
+  "tooltip": false
+},
+"custom/left_div_5": {
+  "format": "\ue0c5",
+  "tooltip": false
+},
+"custom/left_div_6": {
+  "format": "\ue0c5",
+  "tooltip": false
+},
+
+"custom/center_div_1": {
+  "format": "|",
+  "tooltip": false
+},
+
+"custom/right_div_1": {
+    "format": "\ue0c4",
+    "tooltip": false
+  },
+  "custom/right_div_2": {
+    "format": "\ue0c4",
+    "tooltip": false
+  },
+  "custom/right_div_3": {
+    "format": "\ue0bd",
+    "tooltip": false
+  },
+  "custom/right_div_4": {
+    "format": "\ue0bc",
+    "tooltip": false
+  },
+  "custom/right_div_5": {
+    "format": "\ue0bd",
+    "tooltip": false
+  }, 
+
+ "custom/right_div_6": {
+    "format": "\ue0bc",
+    "tooltip": false
+  },
+
+  "custom/right_div_7": {
+    "format": "\ue0bd",
+    "tooltip": false
+  },
+
+  "custom/right_div_8": {
+    "format": "\ue0bc",
+    "tooltip": false
+  },
+}

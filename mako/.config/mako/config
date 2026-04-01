@@ -1,0 +1,10 @@
+include=~/.config/mako/mako-colors
+
+font=VictorMonoNerdFontPropo 10
+border-size=3
+border-radius=5
+padding=10
+margin=10
+on-notify=exec pw-play ~/dotfiles/sounds/mako-noti.wav
+
+default-timeout=5000

@@ -1,0 +1,659 @@
+────────────────────────────────────────────────────────────────────
+#+TITLE: Waybar config
+────────────────────────────────────────────────────────────────────
+
+* TABELA DE CONTEÚDOS :toc:
+- [[#configuração-geral][CONFIGURAÇÃO GERAL]]
+- [[#módulos-da-esquerda][MÓDULOS DA ESQUERDA]]
+  - [[#cpu][CPU]]
+  - [[#gamemode][Gamemode]]
+  - [[#janelas][Janelas]]
+  - [[#ram][RAM]]
+  - [[#workspaces][Workspaces]]
+- [[#módulos-do-centro][MÓDULOS DO CENTRO]]
+  - [[#cava][Cava]]
+  - [[#grupo---música][Grupo - Música]]
+  - [[#volume][Volume]]
+- [[#módulos-da-direita][MÓDULOS DA DIREITA]]
+  - [[#bateria][Bateria]]
+  - [[#bluetooth][Bluetooth]]
+  - [[#brilho][Brilho]]
+  - [[#cafeína][Cafeína]]
+  - [[#grupo---menu-logout][Grupo - Menu Logout]]
+  - [[#rede][Rede]]
+  - [[#relógio][Relógio]]
+- [[#estilo][ESTILO]]
+- [[#separadores][SEPARADORES]]
+  - [[#esquerda][Esquerda]]
+  - [[#centro][Centro]]
+  - [[#direita][Direita]]
+- [[#scripts][SCRIPTS]]
+  - [[#bluetooth-1][Bluetooth]]
+  - [[#cava-script][Cava (script)]]
+  - [[#cpu-1][CPU]]
+
+* CONFIGURAÇÃO GERAL
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+{ 
+ "layer": "top",
+ "height": 28,
+ "margin-left": 5,
+ "margin-right": 5,
+ "reload_style_on_change": true,
+ "modules-left": ["custom/left_div_1", "hyprland/workspaces", "custom/left_div_2", "custom/cpu", "custom/left_div_3", "memory", "custom/left_div_3", "gamemode", "custom/left_div_4", "hyprland/window", "custom/right_div_1"],
+ "modules-center": ["custom/left_div_5", "group/music", "custom/cava", "pulseaudio", "custom/right_div_2"],
+ "modules-right": ["custom/left_div_6", "network", "custom/right_div_3", "custom/bluetooth_battery", "custom/right_div_4", "idle_inhibitor", "custom/right_div_5", "backlight", "custom/right_div_5", "battery", "custom/right_div_6", "clock", "custom/right_div_7", "group/group-power", "custom/right_div_8"],
+#+end_src
+
+* MÓDULOS DA ESQUERDA
+
+** CPU
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "custom/cpu": {
+    "exec": "~/.config/waybar/scripts/cpu.sh",
+    "interval": 2,
+    "return-type": "json",
+    "tooltip": true,
+    "on-click": "alacritty -e btop"
+  },
+#+end_src
+
+** Gamemode
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+"gamemode": {
+    "format": "󰊴",
+    "format-alt": "󰊴",
+    "glyph": "󰊴",
+    "use-icon": false,
+    "hide-not-running": false,
+    "icon-spacing": 4,
+    "icon-size": 20,
+    "tooltip": true,
+    "tooltip-format": "Games running: {count}"
+  },
+#+end_src
+
+** Janelas
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "hyprland/window": {
+    "max-length": 20,
+    "rewrite": {
+      "rakis@rakisbook:(.*)": " Alacritty - $1",
+      "(.*) — Ablaze Floorp": " Floorp - $1",
+      "(.*) - GNU Emacs at rakisbook": " Emacs - $1",
+      "": " Hyprland - Home"
+    }
+  },
+#+end_src
+
+** RAM
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "memory": {
+    "interval": 2,
+    "format": " {used:0.1f}GiB | {total:0.0f}GiB",
+    "tooltip-format": "󰓡 {swapUsed}GiB | {swapTotal}GiB",
+    "on-click": "alacritty -e btop",
+    "states": {
+      "warning": 60,
+      "critical": 85
+    }
+  },
+#+end_src
+
+** Workspaces
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "hyprland/workspaces": {
+    "persistent-workspaces": { "*": 5 },
+    "format": "{icon}",
+    "format-window-separator": "",
+    "format-icons": {
+      "1": "󰖟",
+      "2": "",
+      "3": "",
+      "4": "󰓓",
+      "default": "󱓝",
+      "active": "󰨑",
+      "urgent": "󱇎"
+    }
+  },
+#+end_src
+
+* MÓDULOS DO CENTRO
+
+** Cava
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "custom/cava": {
+    "exec": "~/.config/waybar/scripts/cava.sh",
+    "tooltip": false,
+    "format": "{}",
+    "escape": false,
+    "on-click-middle": "playerctl play-pause",
+    "on-click-right": "playerctl next",
+    "on-click": "spicetify apply"
+  },
+#+end_src
+
+** Grupo - Música
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "group/music": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 500
+    },
+    "modules": ["mpris#main", "custom/center_div_1", "mpris#hidden"]
+  },
+#+end_src
+
+*** Drawer
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "mpris#hidden": {
+    "interval": 1,
+    "player": "spotify",
+    "format": "󰀥 {album}",
+    "album-len": 10,
+    "ignored-players": ["firefox"]
+  },
+#+end_src
+
+*** Principal
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "mpris#main": {
+    "player": "spotify",
+    "player-icons": {
+      "default": "",
+      "spotify": ""
+    },
+    "status-icons": {
+      "playing": "",
+      "paused": "",
+      "stopped": ""
+    },
+    "format": "{player_icon} {status_icon} {title} - {artist}",
+    "format-stopped": "{status_icon} Nada tocando",
+    "title-len": 15,
+    "artist-len": 10,
+    "ignored-players": ["firefox"]
+  },
+#+end_src
+
+** Volume
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+    "pulseaudio": {
+        "format": "{volume}% {icon}",
+        "format-bluetooth": "{volume}% {icon} ",
+        "format-bluetooth-muted": "{volume}%  ",
+        "format-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+#+end_src
+
+* MÓDULOS DA DIREITA
+
+** Bateria
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "battery": {
+    "bat": "BAT1",
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{capacity}% {icon}",
+    "format-icons": {
+      "default": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+      "charging": ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"]
+    },
+
+    "tooltip-format": "{timeTo}, {health}"
+  },
+#+end_src
+
+** Bluetooth
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "custom/bluetooth_battery": {
+    "exec": "/home/rakis/.config/waybar/scripts/bluetooth.sh",
+    "interval": 10,
+    "return-type": "json",
+    "on-click": "blueman-manager",
+    "tooltip": true
+  },
+#+end_src
+
+** Brilho
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "backlight": {
+    "format": "{percent}% {icon}",
+    "format-icons": ["󰃞", "󰃝", "󰃟", "󰃠"],
+    "icon-size": 30
+  },
+#+end_src
+
+** Cafeína
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "󰅶 Real shit",
+      "deactivated": "󰾪 I sleep"
+    }
+  },
+#+end_src
+
+** Grupo - Menu Logout
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "group/group-power": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 500,
+      "children-class": "not-power",
+      "transition-left-to-right": false
+    },
+    "modules": [
+      "custom/power", // First element is the "group leader" and won't ever be hidden
+      "custom/quit",
+      "custom/right_div_7",
+      "custom/lock",
+      "custom/right_div_7",
+      "custom/reboot",
+      "custom/right_div_7",
+    ]
+  },
+  "custom/quit": {
+    "format": "󰗼",
+    "tooltip": false,
+    "on-click": "hyprctl dispatch exit"
+  },
+  "custom/lock": {
+    "format": "󰍁",
+    "tooltip": false,
+    "on-click": "swaylock"
+  },
+  "custom/reboot": {
+    "format": "󰜉",
+    "tooltip": false,
+    "on-click": "reboot"
+  },
+  "custom/power": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "shutdown now"
+  },
+#+end_src
+
+** Rede
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "network": {
+    "interval": 1,
+    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "format-ethernet": "",
+    "tooltip-format-ethernet": "{ifname} | 󰕒{bandwidthUpBytes} 󰇚{bandwidthDownBytes}",
+    "format-wifi": "{icon} {essid}",
+    "tooltip-format-wifi": "{essid} | 󰕒{bandwidthUpBytes} 󰇚{bandwidthDownBytes}",
+    "format-disconnected": "󰤮",
+    "tooltip-format-disconnected": "",
+    "on-click": "alacritty -e nmtui"
+  },
+#+end_src
+
+** Relógio
+
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "clock": {
+    "format": "󰥔 {:%H:%M}",
+    "interval": 1,
+    "format-alt": "󰃭 {:%d/%m/%Y}",
+    "tooltip-format": "<tt><small>{calendar}</small></tt>",
+    "calendar": {
+      "mode": "month",
+      "mode-mon-col": 3,
+      "on-scroll": 1,
+      "format": {
+        "months": "{}",
+        "days": "{}",
+        "weekdays": "{}",
+        "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
+      }
+    },
+    "actions": {
+      "on-click-right": "mode",
+      "on-scroll-up": "shift_up",
+      "on-scroll-down": "shift_down"
+    }
+  },
+#+end_src
+
+* ESTILO
+
+* SEPARADORES
+
+** Esquerda
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "custom/left_div_1": {
+    "format": "\ue0be",
+    "tooltip": false
+  },
+  "custom/left_div_2": {
+    "format": "\ue0be",
+    "tooltip": false
+  },
+  "custom/left_div_3": {
+    "format": "\ue0bf",
+    "tooltip": false
+  },
+  "custom/left_div_4": {
+    "format": "\ue0be",
+    "tooltip": false
+  },
+  "custom/left_div_5": {
+    "format": "\ue0c5",
+    "tooltip": false
+  },
+  "custom/left_div_6": {
+    "format": "\ue0c5",
+    "tooltip": false
+  },
+#+end_src
+** Centro
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "custom/center_div_1": {
+    "format": "|",
+    "tooltip": false
+  },
+#+end_src
+** Direita
+#+begin_src jsonc :tangle ~/.config/waybar/config.jsonc
+  "custom/right_div_1": {
+    "format": "\ue0c4",
+    "tooltip": false
+  },
+  "custom/right_div_2": {
+    "format": "\ue0c4",
+    "tooltip": false
+  },
+  "custom/right_div_3": {
+    "format": "\ue0bd",
+    "tooltip": false
+  },
+  "custom/right_div_4": {
+    "format": "\ue0bc",
+    "tooltip": false
+  },
+  "custom/right_div_5": {
+    "format": "\ue0bd",
+    "tooltip": false
+  }, 
+
+ "custom/right_div_6": {
+    "format": "\ue0bc",
+    "tooltip": false
+  },
+
+  "custom/right_div_7": {
+    "format": "\ue0bd",
+    "tooltip": false
+  },
+
+  "custom/right_div_8": {
+    "format": "\ue0bc",
+    "tooltip": false
+  },
+}
+#+end_src
+
+* SCRIPTS
+
+** Bluetooth
+
+#+begin_src bash :tangle ~/.config/waybar/scripts/bluetooth.sh
+#!/bin/bash
+
+DEVICES=$(upower -e | grep -v -E "BAT|line_power|DisplayDevice")
+
+OUTPUT=""
+TOOLTIP=""
+
+for DEVICE in $DEVICES; do
+    INFO=$(upower -i "$DEVICE" 2>/dev/null)
+
+    MODEL=$(echo "$INFO" | awk -F: '/model/ {print $2}' | xargs)
+    PERCENT=$(echo "$INFO" | awk -F: '/percentage/ {gsub("%","",$2); gsub(" ","",$2); print $2}')
+    RECHARGEABLE=$(echo "$INFO" | awk -F: '/rechargeable/ {print $2}' | xargs)
+
+    [ -z "$MODEL" ] && MODEL="Unknown"
+
+    # Detecta tipo
+    case "$DEVICE" in
+        *headset*) TYPE_ICON="" ;;
+        *mouse*) TYPE_ICON="" ;;
+        *keyboard*) TYPE_ICON="" ;;
+        *phone*) TYPE_ICON="" ;;
+        *) TYPE_ICON="" ;;
+    esac
+
+    # Ignora dispositivos sem bateria real
+    if [ -z "$PERCENT" ] || [ "$RECHARGEABLE" = "no" ]; then
+        OUTPUT+=" $TYPE_ICON  "
+        TOOLTIP+="$TYPE_ICON  $MODEL\\n   ⚠ sem suporte a bateria\\n\\n"
+        continue
+    fi
+
+    # Ícone de bateria
+    if [ "$PERCENT" -ge 90 ]; then ICON="󰥈"
+    elif [ "$PERCENT" -ge 80 ]; then ICON="󰥅"
+    elif [ "$PERCENT" -ge 70 ]; then ICON="󰥄"
+    elif [ "$PERCENT" -ge 60 ]; then ICON="󰥃"
+    elif [ "$PERCENT" -ge 50 ]; then ICON="󰥂"
+    elif [ "$PERCENT" -ge 40 ]; then ICON="󰥁"
+    elif [ "$PERCENT" -ge 30 ]; then ICON="󰥀"
+    elif [ "$PERCENT" -ge 20 ]; then ICON="󰤿"
+    else ICON="󰤾"
+    fi
+
+    PERCENT_FORMATTED=$(printf "%3s" "${PERCENT}%")
+
+    OUTPUT+="$TYPE_ICON $ICON  $PERCENT_FORMATTED  "
+
+    # Tooltip bonito
+    TOOLTIP+="$TYPE_ICON  $MODEL\\n"
+    TOOLTIP+="   $ICON  ${PERCENT}%\\n\\n"
+done
+
+# Remove quebra de linha extra no final
+TOOLTIP="${TOOLTIP%\\n\\n}"
+
+# Se não tiver nada conectado
+if [ -z "$OUTPUT" ]; then
+    echo '{"text":"󰂲 ","class":"off"}'
+    exit 0
+fi
+
+# Limpa caracteres problemáticos
+OUTPUT=$(echo -n "$OUTPUT" | tr -d '\r')
+TOOLTIP=$(echo -n "$TOOLTIP" | tr -d '\r')
+
+# JSON final
+printf '{"text":"%s","tooltip":"%s"}\n' "$OUTPUT" "$TOOLTIP"
+#+end_src
+
+** Cava (script)
+
+#+begin_src bash :tangle ~/.config/waybar/scripts/cava.sh
+#!/usr/bin/env bash
+
+bar="▁▂▃▄▅▆▇█"
+
+# sed mapping
+dict="s/;//g;"
+for ((i=0; i<${#bar}; i++)); do
+    dict="${dict}s/$i/${bar:$i:1}/g;"
+done
+
+cava_json="$HOME/.cache/matugen/cava.json"
+
+c1=$(jq -r '.primary.p30' "$cava_json")
+c2=$(jq -r '.primary.p40' "$cava_json")
+c3=$(jq -r '.primary.p50' "$cava_json")
+c4=$(jq -r '.primary.p60' "$cava_json")
+c5=$(jq -r '.primary.p70' "$cava_json")
+c6=$(jq -r '.primary.p80' "$cava_json")
+c7=$(jq -r '.primary.p90' "$cava_json")
+c8=$(jq -r '.primary.p95' "$cava_json")
+
+# awk colorizer (MUITO mais rápido)
+colorize() {
+    awk -v c1="$c1" -v c2="$c2" -v c3="$c3" -v c4="$c4" \
+        -v c5="$c5" -v c6="$c6" -v c7="$c7" -v c8="$c8" '
+    {
+        out=""
+        for(i=1;i<=length($0);i++){
+            ch=substr($0,i,1)
+            if(ch=="▁") col=c1
+            else if(ch=="▂") col=c2
+            else if(ch=="▃") col=c3
+            else if(ch=="▄") col=c4
+            else if(ch=="▅") col=c5
+            else if(ch=="▆") col=c6
+            else if(ch=="▇") col=c7
+            else if(ch=="█") col=c8
+
+            out=out "<span foreground='\''" col "'\''>" ch "</span>"
+        }
+        print out
+    }'
+}
+
+generate_random() {
+    local result=""
+    for ((i=0; i<24; i++)); do
+        result+="${bar:RANDOM%8:1}"
+    done
+    echo "$result"
+}
+
+# cava config
+config_file="/tmp/waybar_cava_config"
+cat > "$config_file" <<EOF
+[general]
+bars = 24
+framerate = 60
+[output]
+method = raw
+raw_target = /dev/stdout
+data_format = ascii
+ascii_max_range = 7
+EOF
+
+silent_threshold=150
+silent_count=0
+is_silent=true
+silent_pattern=""
+
+# transição
+last_output=""
+transition_frames=3
+transition_step=0
+
+silent_bar="▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁"
+
+cava -p "$config_file" | while read -r line; do
+    converted=$(sed "$dict" <<< "$line")
+
+    if [[ "$converted" == "$silent_bar" ]]; then
+        ((silent_count++))
+
+        if ((silent_count >= silent_threshold)); then
+            if [[ "$is_silent" == false || -z "$silent_pattern" ]]; then
+                silent_pattern=$(generate_random)
+                is_silent=true
+            fi
+            output="$silent_pattern"
+        else
+            output="$converted"
+        fi
+    else
+        if [[ "$is_silent" == true ]]; then
+            transition_step=$transition_frames
+        fi
+
+        silent_count=0
+        is_silent=false
+        output="$converted"
+    fi
+
+    # transição → evita spike
+    if ((transition_step > 0)); then
+        output="$last_output"
+        ((transition_step--))
+
+        printf "<span font='VictorMonoNerdFontPropo 10'>%s</span>\n" "$output"
+        last_output="$output"
+        continue
+    fi
+
+    last_output="$output"
+
+    # AWK entra aqui (rápido)
+    colored=$(printf "%s\n" "$output" | colorize)
+    printf "<span font='VictorMonoNerdFontPropo 10'>%s</span>\n" "$colored"
+
+done
+#+end_src
+
+** CPU
+
+#+begin_src bash :tangle ~/.config/waybar/scripts/cpu.sh
+#!/bin/bash
+
+usage=$(top -bn1 | grep "%CPU(s)" | awk '{gsub(",", "."); print int(100 - $8)}')
+
+cores=$(mpstat -P ALL 1 1 | awk '/^[0-9]/ && $2 != "CPU" {
+    gsub(",", ".", $NF)
+    use = int(100 - $NF)
+    if (use < 13) icon = "▁"
+    else if (use < 25) icon = "▂"
+    else if (use < 38) icon = "▃"
+    else if (use < 50) icon = "▄"
+    else if (use < 63) icon = "▅"
+    else if (use < 75) icon = "▆"
+    else if (use < 88) icon = "▇"
+    else icon = "█"
+    printf "Core %s: %s %d%%  |  ", $2, icon, use
+}')
+
+if [ "$usage" -lt 30 ]; then
+    icon="󰾆"; class="low"
+elif [ "$usage" -lt 60 ]; then
+    icon="󰾅"; class="mid"
+elif [ "$usage" -lt 85 ]; then
+    icon="󰓅"; class="high"
+else
+    icon="󱃂"; class="critical"
+fi
+
+echo "{\"text\": \"$icon $usage%\", \"tooltip\": \"$cores\", \"class\": \"$class\"}"
+#+end_src

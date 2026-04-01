@@ -1,0 +1,267 @@
+@import "/home/rakis/.config/waybar/_colors.scss";
+
+@mixin section-dividers($bg, $color) {
+  background-color: $bg;
+  color: $color;
+  font-size: 20px;
+}
+
+@mixin modules($bg, $color) {
+  background-color: $bg;
+  color: $color;
+  padding: 0 5px;
+  font-size: 15px;
+}
+
+* {
+  all: unset;
+  font-family: "VictorMonoNerdFontPropo";
+  font-style: italic;
+  font-size: 13px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 15px;
+  color: $on_primary;
+}
+
+tooltip {
+  background-color: $primary;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+@keyframes blink-workspace {
+  to {
+    background-color: $primary;
+    color: $on_primary;
+  }
+}
+
+@keyframes blink-battery {
+  to {
+    color: $on_error;
+    background-color: $error;
+  }
+}
+
+.modules-left {
+  #custom-left_div_1 {
+    @include section-dividers(transparent, $primary);
+  }
+
+  #workspaces {
+    @include modules($primary, $on_primary);
+    button {
+      padding: 0 5px;
+      transition: 0.2s all ease-in-out;
+      &:hover {
+        label {
+          color: $on_primary_container;
+        }
+        background-color: $on_primary_fixed_variant;
+        transition: 0.2s all ease-in-out;
+      }
+    }
+    .active {
+      label {
+        color: $primary;
+      }
+      background-color: $on_primary;
+    }
+    .urgent {
+      background-color: $inverse_primary;
+      animation-name: blink-workspace;
+      animation-duration: 1s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+  }
+
+  #custom-left_div_2 {
+    @include section-dividers($primary, $secondary);
+  }
+
+  #custom-cpu {
+    @include modules($secondary, $on_secondary);
+    &.low {
+      color: darkolivegreen;
+    }
+    &.mid {
+      color: #baaa01;
+    }
+    &.high {
+      color: orangered;
+    }
+    &.critical {
+      color: $error_container;
+    }
+  }
+
+  #custom-left_div_3 {
+    @include section-dividers($secondary, $on_secondary);
+  }
+
+  #memory {
+    @include modules($secondary, darkolivegreen);
+
+    &.warning {
+      color: #baaa01;
+    }
+    &.critical {
+      color: $error_container;
+    }
+  }
+
+  #gamemode {
+    @include modules($secondary, $on_secondary);
+  }
+
+  #custom-left_div_4 {
+    @include section_dividers($secondary, $tertiary);
+  }
+
+  #window {
+    @include modules($tertiary, $on_tertiary);
+
+    &.empty {
+      background-color: transparent;
+    }
+  }
+
+  #custom-right_div_1 {
+    @include section-dividers(transparent, $tertiary);
+  }
+}
+
+.modules-center {
+  #custom-left_div_5 {
+    @include section-dividers(transparent, $inverse_primary);
+    font-style: normal;
+  }
+
+  #custom-center_div_1 {
+    @include section-dividers(transparent, $on_tertiary);
+    font-style: normal;
+  }
+
+  #pulseaudio,
+  #custom-cava,
+  #window {
+    @include modules($inverse_primary, $on_surface);
+  }
+
+  #music {
+    @include modules($inverse_primary, $on_surface);
+    label {
+      color: $on_surface;
+    }
+    #mpris.main {
+      margin-right: 5px;
+    }
+
+    #custom-progress {
+      @include modules($inverse_primary, $on_surface);
+    }
+  }
+
+  #custom-right_div_2 {
+    @include section-dividers(transparent, $inverse_primary);
+  }
+}
+
+.modules-right {
+  #custom-left_div_6 {
+    @include section-dividers(transparent, $tertiary);
+  }
+
+  #custom-right_div_3 {
+    @include section-dividers($tertiary, $on_tertiary);
+  }
+
+  #custom-bluetooth_battery {
+    background-color: $tertiary;
+    color: $on_tertiary;
+    padding-left: 5px;
+    font-size: 18px;
+  }
+
+  #network {
+    @include modules($tertiary, $on_tertiary);
+    &.disconnected,
+    &.disabled {
+      label {
+        color: $on_error;
+      }
+    }
+  }
+
+  #custom-right_div_4 {
+    @include section-dividers($secondary, $tertiary);
+  }
+
+  #custom-right_div_5 {
+    @include section-dividers($secondary, $on_secondary);
+  }
+
+  #idle_inhibitor {
+    @include modules($secondary, $on_secondary);
+    &.activated {
+      color: darkolivegreen;
+    }
+  }
+
+  #backlight {
+    @include modules($secondary, $on_secondary);
+  }
+
+  #battery {
+    @include modules($secondary, $on_secondary);
+
+    &.charging {
+      color: darkolivegreen;
+    }
+
+    &.warning:not(.charging) {
+      color: #baaa01;
+    }
+
+    &.critical:not(.charging) {
+      animation-name: blink-battery;
+      animation-duration: 1s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+  }
+
+  #custom-right_div_6 {
+    background-color: $primary;
+    font-size: 20px;
+    color: $secondary;
+  }
+
+  #clock {
+    @include modules($primary, $on_primary);
+  }
+
+  #custom-right_div_7 {
+    @include section-dividers($primary, $on_primary);
+  }
+
+  #group-power {
+    @include modules($primary, $on_primary);
+
+    #custom-quit,
+    #custom-lock,
+    #custom-reboot {
+      margin-right: 5px;
+      font-size: 20px;
+    }
+  }
+
+  #custom-right_div_8 {
+    @include section-dividers(transparent, $primary);
+  }
+}

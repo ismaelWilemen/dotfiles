@@ -1,0 +1,13 @@
+@import "~/.config/rofi/config.rasi"
+
+window {
+    width: 1600px;
+    anchor: center;
+    location: center;
+    x-offset: 0;
+    y-offset: 0;
+}
+
+listview {
+    lines: 15;
+}

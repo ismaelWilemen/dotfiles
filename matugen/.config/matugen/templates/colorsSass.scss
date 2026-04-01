@@ -1,0 +1,20 @@
+$background: {{background}};
+$foreground: {{on_background}};
+
+$black: {{surface_container_lowest}};
+$red: {{on_error}};
+$green: {{tertiary}};
+$yellow: {{secondary}};
+$blue: {{primary}};
+$magenta: {{primary_container}};
+$cyan: {{secondary_container}};
+$white: {{on_surface}};
+
+$bright_black: {{surface_container_highest}};
+$bright_red: {{on_error_container}};
+$bright_green: {{on_tertiary_container}};
+$bright_yellow: {{on_secondary_container}};
+$bright_blue: {{primary_fixed}};
+$bright_magenta: {{primary_fixed_dim}};
+$bright_cyan: {{secondary_fixed_dim}};
+$bright_white: #ffffff;
