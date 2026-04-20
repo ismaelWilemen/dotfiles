@@ -34,8 +34,8 @@ source = ./colors.conf
 ** VARIÁVEIS
 
 #+begin_src conf :tangle ~/.config/hypr/hyprland.conf
-$browser  = floorp
-$editor   = emacsclient -c -a ""
+$browser  = librewolf
+$editor   = nvim
 $fileexp  = dolphin
 $super = SUPER
 $terminal = alacritty

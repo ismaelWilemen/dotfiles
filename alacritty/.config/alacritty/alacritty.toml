@@ -26,19 +26,19 @@ multiplier = 3
 size = 15
 
 [font.normal]
-family = "VictorMonoNerdFontPropo"
+family = "Maple Mono NF CN"
 style = "Regular"
 
 [font.bold]
-family = "VictorMonoNerdFontPropo"
+family = "Maple Mono NF CN"
 style = "Bold"
 
 [font.italic]
-family = "VictorMonoNerdFontPropo"
+family = "Maple Mono NF CN"
 style = "Italic"
 
 [font.bold_italic]
-family = "VictorMonoNerdFontPropo"
+family = "Maple Mono NF CN"
 style = "Bold Italic"
 
 [selection]
@@ -139,3 +139,8 @@ working_directory = "None"
 import = [
   "/home/rakis/.config/alacritty/colors.toml"
 ]
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"

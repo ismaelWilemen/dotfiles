@@ -14,3 +14,28 @@ nvim/.config/nvim/.git
 wallpaper_selector/*
 !wallpaper_selector/selector.py
 !wallpaper_selector/run.sh
+spotify/.config/spotify/Users/
+
+# Spotify
+spotify/.config/spotify/Users/
+spotify/.config/spotify/Data/
+spotify/.config/spotify/Storage/
+
+# General
+*.bak
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+
+# Neovim
+nvim/.config/nvim/undo/
+nvim/.config/nvim/swap/
+nvim/.config/nvim/backup/
+nvim/.config/nvim/view/
+
+# Emacs
+emacs/.config/emacs/auto-save-list/
+emacs/.config/emacs/eln-cache/
+emacs/.config/emacs/elpa/
+emacs/.config/emacs/elpaca/

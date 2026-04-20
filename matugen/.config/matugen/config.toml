@@ -9,9 +9,18 @@ output_path = "~/.config/alacritty/colors.toml"
 input_path = "~/.config/matugen/templates/colors.css"
 output_path = "~/.cache/matugen/colors.css"
 
+[templates.ghostty]
+input_path = '~/.config/matugen/templates/colors.ghostty'
+output_path = '~/.config/ghostty/themes/Matugen'
+post_hook = 'pkill -SIGUSR2 ghostty'
+
 [templates.hyprland]
 input_path = "~/.config/matugen/templates/hyprland.conf"
 output_path = "~/.config/hypr/colors.conf"
+
+[templates.kitty]
+input_path = "~/.config/matugen/templates/colors.kitty"
+output_path = "~/.config/kitty/colors.conf"
 
 [templates.mako]
 input_path = "~/.config/matugen/templates/mako"
@@ -40,6 +49,10 @@ output_path = "~/.config/rofi/colors.rasi"
 [templates.spotify]
 input_path = '~/.config/matugen/templates/sleek.ini'
 output_path = '~/.config/spicetify/Themes/Sleek/color.ini'
+
+[templates.nvim]
+input_path = "~/.config/matugen/templates/colors.lua"
+output_path = "~/.config/nvim/lua/config/colors.lua"
 
 [templates.waybar]
 input_path = "~/.config/matugen/templates/waybar.scss"

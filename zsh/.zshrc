@@ -15,13 +15,20 @@ export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range=:50 {}' --pre
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -50' --preview-window=right:40%"
 
 # ── Completion engine (antes de tudo que usa completion) ───────────────────────────────────────────────────
-autoload -Uz compinit && compinit
+autoload -Uz compinit
+for dump in "${ZDOTDIR:-$HOME}/.zcompdump"(N.mh+24); do
+  compinit
+done
+compinit -C
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'  # case insensitive
 
 # ── fzf keybinds (Ctrl+T, Alt+C, Ctrl+R) ───────────────────────────────────────────────────────────────────
-source <(fzf --zsh)
+if [[ ! -f ~/.fzf.zsh_static ]]; then
+  fzf --zsh > ~/.fzf.zsh_static
+fi
+source ~/.fzf.zsh_static
 
 # ── fzf-tab (Tab vira popup fzf) ───────────────────────────────────────────────────────────────────────────
 # Deve vir DEPOIS do compinit e do source fzf
@@ -68,8 +75,11 @@ chpwd() {
   eza --icons
 }
 
-# ── Zoxide (substitui cd) ──────────────────────────────────────────────────────────────────────────────────
-eval "$(zoxide init zsh --cmd cd)"
+# ── zoxide ─────────────────────────────────────────────────────────────────────────────────────────────────
+if [[ ! -f ~/.zoxide.zsh_static ]]; then
+  zoxide init zsh --cmd cd > ~/.zoxide.zsh_static
+fi
+source ~/.zoxide.zsh_static
 
 # ── Autosuggestions (inline, aceita com → ou Ctrl+F) ───────────────────────────────────────────────────────
 source ~/zsh_plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -78,3 +88,7 @@ ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 
 # ── Syntax highlighting (sempre por último) ────────────────────────────────────────────────────────────────
 source ~/zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+export GOOGLE_API_KEY="AIzaSyB_t5iXOiSLXFvUxQjSs7knkaRE4r-KVYA"
+export ANTHROPIC_BASE_URL="http://127.0.0.1:3456"
+export ANTHROPIC_API_KEY="dummy"
+export ANTHROPIC_AUTH_TOKEN="local-router"

@@ -1,0 +1,11 @@
+theme = "Matugen"
+
+language = br
+font-family = Monolisa
+font-feature = calt
+font-feature = liga
+font-size = 16
+background-opacity = 0.85
+title = "󰊠 Ghostty" 
+
+gtk-single-instance = true
