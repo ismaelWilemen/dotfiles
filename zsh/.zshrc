@@ -5,7 +5,6 @@ fi
 source ~/zsh_plugins/powerlevel10k/powerlevel10k.zsh-theme
 
 setopt interactivecomments
-export EDITOR=nvim
 
 # ── fd como backend do fzf ─────────────────────────────────────────────────────────────────────────────────
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
@@ -86,9 +85,14 @@ source ~/zsh_plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)  # histórico primeiro, depois completion
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 
+# ── Exports ────────────────────────────────────────────────────────────────
+export EDITOR=nvim
+export PATH="$PATH:/opt/flutter/bin"
+export CHROME_EXECUTABLE=$(which helium-browser)
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+export JAVA_HOME=/usr/lib/jvm/java-26-openjdk
+
 # ── Syntax highlighting (sempre por último) ────────────────────────────────────────────────────────────────
 source ~/zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-export GOOGLE_API_KEY="AIzaSyB_t5iXOiSLXFvUxQjSs7knkaRE4r-KVYA"
-export ANTHROPIC_BASE_URL="http://127.0.0.1:3456"
-export ANTHROPIC_API_KEY="dummy"
-export ANTHROPIC_AUTH_TOKEN="local-router"

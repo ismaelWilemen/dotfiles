@@ -7,19 +7,19 @@
   margin: 0;
   padding: 0;
   font-size: 15px;
-  color: #003733;
+  color: #142f60;
 }
 
 tooltip {
-  background-color: #81d5cd;
+  background-color: #afc6ff;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
 
 @keyframes blink-workspace {
   to {
-    background-color: #81d5cd;
-    color: #003733;
+    background-color: #afc6ff;
+    color: #142f60;
   }
 }
 @keyframes blink-battery {
@@ -30,12 +30,12 @@ tooltip {
 }
 .modules-left #custom-left_div_1 {
   background-color: transparent;
-  color: #81d5cd;
+  color: #afc6ff;
   font-size: 20px;
 }
 .modules-left #workspaces {
-  background-color: #81d5cd;
-  color: #003733;
+  background-color: #afc6ff;
+  color: #142f60;
   padding: 0 5px;
   font-size: 15px;
 }
@@ -44,20 +44,20 @@ tooltip {
   transition: 0.2s all ease-in-out;
 }
 .modules-left #workspaces button:hover label {
-  color: #9df2e9;
+  color: #d9e2ff;
 }
 .modules-left #workspaces button:hover {
-  background-color: #00504b;
+  background-color: #2e4578;
   transition: 0.2s all ease-in-out;
 }
 .modules-left #workspaces .active label {
-  color: #81d5cd;
+  color: #afc6ff;
 }
 .modules-left #workspaces .active {
-  background-color: #003733;
+  background-color: #142f60;
 }
 .modules-left #workspaces .urgent {
-  background-color: #006a64;
+  background-color: #465d91;
   animation-name: blink-workspace;
   animation-duration: 1s;
   animation-timing-function: linear;
@@ -65,13 +65,13 @@ tooltip {
   animation-direction: alternate;
 }
 .modules-left #custom-left_div_2 {
-  background-color: #81d5cd;
-  color: #b0ccc8;
+  background-color: #afc6ff;
+  color: #bfc6dc;
   font-size: 20px;
 }
 .modules-left #custom-cpu {
-  background-color: #b0ccc8;
-  color: #1c3532;
+  background-color: #bfc6dc;
+  color: #293042;
   padding: 0 5px;
   font-size: 15px;
 }
@@ -88,12 +88,12 @@ tooltip {
   color: #93000a;
 }
 .modules-left #custom-left_div_3 {
-  background-color: #b0ccc8;
-  color: #1c3532;
+  background-color: #bfc6dc;
+  color: #293042;
   font-size: 20px;
 }
 .modules-left #memory {
-  background-color: #b0ccc8;
+  background-color: #bfc6dc;
   color: darkolivegreen;
   padding: 0 5px;
   font-size: 15px;
@@ -105,19 +105,19 @@ tooltip {
   color: #93000a;
 }
 .modules-left #gamemode {
-  background-color: #b0ccc8;
-  color: #1c3532;
+  background-color: #bfc6dc;
+  color: #293042;
   padding: 0 5px;
   font-size: 15px;
 }
 .modules-left #custom-left_div_4 {
-  background-color: #b0ccc8;
-  color: #afc9e7;
+  background-color: #bfc6dc;
+  color: #dfbbde;
   font-size: 20px;
 }
 .modules-left #window {
-  background-color: #afc9e7;
-  color: #18324a;
+  background-color: #dfbbde;
+  color: #412742;
   padding: 0 5px;
   font-size: 15px;
 }
@@ -126,73 +126,73 @@ tooltip {
 }
 .modules-left #custom-right_div_1 {
   background-color: transparent;
-  color: #afc9e7;
+  color: #dfbbde;
   font-size: 20px;
 }
 
 .modules-center #custom-left_div_5 {
   background-color: transparent;
-  color: #006a64;
+  color: #465d91;
   font-size: 20px;
   font-style: normal;
 }
 .modules-center #custom-center_div_1 {
   background-color: transparent;
-  color: #18324a;
+  color: #412742;
   font-size: 20px;
   font-style: normal;
 }
 .modules-center #pulseaudio,
 .modules-center #custom-cava,
 .modules-center #window {
-  background-color: #006a64;
-  color: #dde4e2;
+  background-color: #465d91;
+  color: #e2e2e9;
   padding: 0 5px;
   font-size: 15px;
 }
 .modules-center #music {
-  background-color: #006a64;
-  color: #dde4e2;
+  background-color: #465d91;
+  color: #e2e2e9;
   padding: 0 5px;
   font-size: 15px;
 }
 .modules-center #music label {
-  color: #dde4e2;
+  color: #e2e2e9;
 }
 .modules-center #music #mpris.main {
   margin-right: 5px;
 }
 .modules-center #music #custom-progress {
-  background-color: #006a64;
-  color: #dde4e2;
+  background-color: #465d91;
+  color: #e2e2e9;
   padding: 0 5px;
   font-size: 15px;
 }
 .modules-center #custom-right_div_2 {
   background-color: transparent;
-  color: #006a64;
+  color: #465d91;
   font-size: 20px;
 }
 
 .modules-right #custom-left_div_6 {
   background-color: transparent;
-  color: #afc9e7;
+  color: #dfbbde;
   font-size: 20px;
 }
 .modules-right #custom-right_div_3 {
-  background-color: #afc9e7;
-  color: #18324a;
+  background-color: #dfbbde;
+  color: #412742;
   font-size: 20px;
 }
 .modules-right #custom-bluetooth_battery {
-  background-color: #afc9e7;
-  color: #18324a;
+  background-color: #dfbbde;
+  color: #412742;
   padding-left: 5px;
   font-size: 18px;
 }
 .modules-right #network {
-  background-color: #afc9e7;
-  color: #18324a;
+  background-color: #dfbbde;
+  color: #412742;
   padding: 0 5px;
   font-size: 15px;
 }
@@ -200,18 +200,18 @@ tooltip {
   color: #690005;
 }
 .modules-right #custom-right_div_4 {
-  background-color: #b0ccc8;
-  color: #afc9e7;
+  background-color: #bfc6dc;
+  color: #dfbbde;
   font-size: 20px;
 }
 .modules-right #custom-right_div_5 {
-  background-color: #b0ccc8;
-  color: #1c3532;
+  background-color: #bfc6dc;
+  color: #293042;
   font-size: 20px;
 }
 .modules-right #idle_inhibitor {
-  background-color: #b0ccc8;
-  color: #1c3532;
+  background-color: #bfc6dc;
+  color: #293042;
   padding: 0 5px;
   font-size: 15px;
 }
@@ -219,14 +219,14 @@ tooltip {
   color: darkolivegreen;
 }
 .modules-right #backlight {
-  background-color: #b0ccc8;
-  color: #1c3532;
+  background-color: #bfc6dc;
+  color: #293042;
   padding: 0 5px;
   font-size: 15px;
 }
 .modules-right #battery {
-  background-color: #b0ccc8;
-  color: #1c3532;
+  background-color: #bfc6dc;
+  color: #293042;
   padding: 0 5px;
   font-size: 15px;
 }
@@ -244,24 +244,24 @@ tooltip {
   animation-direction: alternate;
 }
 .modules-right #custom-right_div_6 {
-  background-color: #81d5cd;
+  background-color: #afc6ff;
   font-size: 20px;
-  color: #b0ccc8;
+  color: #bfc6dc;
 }
 .modules-right #clock {
-  background-color: #81d5cd;
-  color: #003733;
+  background-color: #afc6ff;
+  color: #142f60;
   padding: 0 5px;
   font-size: 15px;
 }
 .modules-right #custom-right_div_7 {
-  background-color: #81d5cd;
-  color: #003733;
+  background-color: #afc6ff;
+  color: #142f60;
   font-size: 20px;
 }
 .modules-right #group-power {
-  background-color: #81d5cd;
-  color: #003733;
+  background-color: #afc6ff;
+  color: #142f60;
   padding: 0 5px;
   font-size: 15px;
 }
@@ -273,7 +273,7 @@ tooltip {
 }
 .modules-right #custom-right_div_8 {
   background-color: transparent;
-  color: #81d5cd;
+  color: #afc6ff;
   font-size: 20px;
 }
 
