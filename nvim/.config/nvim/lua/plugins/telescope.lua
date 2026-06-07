@@ -36,7 +36,12 @@ return {
 			local builtin = require("telescope.builtin")
 			local keymap = vim.keymap
 			keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Fuzzy find files in project" })
-			keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "Fuzzy find recent files" })
+			vim.keymap.set("n", "<leader>fr", function()
+				vim.cmd("silent! wall")
+				vim.schedule(function()
+					require("telescope.builtin").oldfiles()
+				end)
+			end, { desc = "Recent Files" })
 			keymap.set("n", "<leader>fs", builtin.live_grep, { desc = "Find string in project (grep)" })
 			keymap.set("n", "<leader>fc", builtin.grep_string, { desc = "Find string under cursor" })
 			keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Fuzzy find open buffers" })

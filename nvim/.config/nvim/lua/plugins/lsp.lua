@@ -90,7 +90,10 @@ return {
 
 					-- Atalho para ligar/desligar inlay hints
 					vim.keymap.set("n", "<leader>th", function()
-						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = args.buf }), { bufnr = args.buf })
+						vim.lsp.inlay_hint.enable(
+							not vim.lsp.inlay_hint.is_enabled({ bufnr = args.buf }),
+							{ bufnr = args.buf }
+						)
 					end, { buffer = args.buf, desc = "Toggle Inlay Hints" })
 
 					-- Ativa inlay hints se o servidor suportar
@@ -134,6 +137,20 @@ return {
 				vim.lsp.config(server, config)
 				vim.lsp.enable(server)
 			end
+			vim.lsp.config("dartls", {
+				capabilities = capabilities,
+				cmd = { "dart", "language-server", "--protocol=lsp" },
+				filetypes = { "dart" },
+				root_dir = vim.fs.dirname(vim.fs.find("pubspec.yaml", { upward = true })[1]),
+				settings = {
+					dart = {
+						showTodos = true,
+						completeFunctionCalls = true,
+						enableSnippets = true,
+					},
+				},
+			})
+			vim.lsp.enable("dartls")
 		end,
 	},
 }

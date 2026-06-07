@@ -22,7 +22,7 @@ return {
 		lazy = false,
 
 		-- Completion for `blink.cmp`
-		dependencies = { "saghen/blink.cmp" },
+		dependencies = { "saghen/blink.cmp", "saghen/blink.lib" },
 	},
 	{
 		"3rd/image.nvim",

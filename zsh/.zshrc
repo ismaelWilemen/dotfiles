@@ -86,13 +86,16 @@ ZSH_AUTOSUGGEST_STRATEGY=(history completion)  # histórico primeiro, depois com
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 
 # ── Exports ────────────────────────────────────────────────────────────────
+# ── Exports ─────────────────────────────────────────────
 export EDITOR=nvim
-export PATH="$PATH:/opt/flutter/bin"
-export CHROME_EXECUTABLE=$(which helium-browser)
-export ANDROID_HOME=$HOME/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
 export JAVA_HOME=/usr/lib/jvm/java-26-openjdk
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH="$PATH:/opt/flutter/bin"
+export PATH="$PATH:$ANDROID_HOME/platform-tools"
+export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
+export PATH="$PATH:$ANDROID_HOME/emulator"
+export PATH="$PATH:$HOME/.spicetify"
+export CHROME_EXECUTABLE=$(which zen-browser)
 
 # ── Syntax highlighting (sempre por último) ────────────────────────────────────────────────────────────────
 source ~/zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

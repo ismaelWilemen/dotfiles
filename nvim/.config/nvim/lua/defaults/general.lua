@@ -13,6 +13,8 @@ local function customize_theme()
 		Type = { italic = true },
 		["@constant.builtin"] = { italic = true },
 		["@keyword.operator"] = { italic = true },
+		-- Flutter closing tags
+		FlutterClosingTags = { fg = "#4a4a4a", italic = true },
 	}
 
 	for group, opts in pairs(groups) do
